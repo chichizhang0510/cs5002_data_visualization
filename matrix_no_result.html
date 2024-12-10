@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Matrix</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+    <style>
+      /* 使页面内容居中 */
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f0f0f0; /* 设置背景颜色 */
+      }
+
+      /* 设置图表容器 */
+      #main {
+        width: 1400px;
+        height: 800px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="main" style="width: 1000px; height: 500px;"></div>
+    <script>
+      // 解析CSV文件为数组格式
+      function parseCSV(csvText) {
+        const rows = csvText.trim().split("\n");
+        const headers = rows[0].split(",").slice(1); // 提取列标题
+        const data = rows.slice(1).map(row => row.split(","));
+        return { headers, data };
+      }
+
+      // 将数据转换为ECharts需要的格式
+      function transformToHeatmapFormat(headers, data) {
+        const usernames = data.map(row => row[0]);
+        const petIDs = headers.map(Number);
+        const heatmapData = [];
+
+        data.forEach((row, rowIndex) => {
+          row.slice(1).forEach((value, colIndex) => {
+            heatmapData.push([colIndex, rowIndex, Number(value) || "-"]);
+          });
+        });
+
+        return { usernames, petIDs, heatmapData };
+      }
+
+      // 加载CSV文件
+      fetch("data/matrix_no_result.csv")
+        .then(response => response.text())
+        .then(csvText => {
+          const { headers, data } = parseCSV(csvText);
+          const { usernames, petIDs, heatmapData } = transformToHeatmapFormat(headers, data);
+
+          // 调试输出，确保数据加载正确
+          console.log(headers, data);
+          console.log(usernames, petIDs, heatmapData);
+
+          // 初始化 ECharts 图表
+          const chartDom = document.getElementById("main");
+          const myChart = echarts.init(chartDom);
+
+          const option = {
+            tooltip: {
+              position: "top",
+              formatter: (params) => {
+                const username = usernames[params.value[1]];
+                const petID = petIDs[params.value[0]];
+                const value = params.value[2];
+                return `User: ${username}<br>Pet ID: ${petID}<br>Score: ${value}`;
+              },
+            },
+            grid: {
+              height: "80%",
+              top: "10%",
+              left: "10%",  // 增加左边距
+              right: "10%", // 增加右边距
+              bottom: "15%", // 增加下边距
+            },
+            xAxis: {
+              type: "category",
+              data: petIDs,
+              splitArea: { show: true },
+              name: "Pet ID",
+            },
+            yAxis: {
+              type: "category",
+              data: usernames,
+              splitArea: { show: true },
+              name: "Username",
+              axisLabel: {
+                rotate: 30, // 旋转标签，避免重叠
+                interval: 0, // 显示所有标签
+              },
+            },
+            visualMap: {
+              min: Math.min(...heatmapData.map(item => item[2])),
+              max: Math.max(...heatmapData.map(item => item[2])),
+              calculable: true,
+              orient: "vertical",
+              right:"top",
+              top: "0.5%",
+              inRange: {
+                color: ["#fef0d9", "#fd8d3c", "#b30000"], // 颜色渐变
+              },
+            },
+            series: [
+              {
+                name: "User Pet Matrix",
+                type: "heatmap",
+                data: heatmapData,
+                emphasis: {
+                  itemStyle: {
+                    shadowBlur: 10,
+                    shadowColor: "rgba(0, 0, 0, 0.5)",
+                  },
+                },
+              },
+            ],
+          };
+
+          myChart.setOption(option);
+        })
+        .catch(error => console.error("Error loading CSV:", error));
+    </script>
+  </body>
+</html>

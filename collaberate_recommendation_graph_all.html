@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>User Pet Relationship Graphs</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      body {
+        display: flex;
+        justify-content: center; /* 居中对齐 */
+        align-items: flex-start;
+        margin: 0;
+        padding: 0;
+<!--        gap: 10px;-->
+        width: 100%;
+      }
+      #left-graph,
+      #right-graph {
+        width: 60%;
+        height: 800px;
+        padding: 0; /* 去除图表的默认内边距 */
+      }
+    </style>
+  </head>
+  <body>
+    <!-- 左侧图表 -->
+    <div id="left-graph"></div>
+    <!-- 右侧图表 -->
+    <div id="right-graph"></div>
+
+    <script>
+      // 左侧图表
+      var chartDomLeft = document.getElementById('left-graph');
+      var myChartLeft = echarts.init(chartDomLeft);
+      myChartLeft.showLoading();
+      $.get('./data/graph_data.json', function (data) {
+        myChartLeft.hideLoading();
+        var optionLeft = {
+          legend: {
+            data: ['User', 'Pet'],
+            top: 40, // 图例距离顶部的距离
+            left: 'center' // 图例居中
+          },
+<!--          grid: {-->
+<!--            top: 50, // 增加图表上方的空间，使图例和图表更紧凑-->
+<!--          },-->
+          series: [
+            {
+              type: 'graph',
+              layout: 'force',
+              animation: false,
+              label: {
+                position: 'right',
+                formatter: '{b}'
+              },
+              draggable: true,
+              data: data.nodes.map(function (node, idx) {
+                node.id = idx;
+                if (node.category === 0) {
+                  node.itemStyle = {
+                    color: '#ffffff',
+                    borderColor: '#FF7F3E',
+                    borderWidth: 2
+                  };
+                  node.symbolSize = 10;
+                } else if (node.category === 1) {
+                  node.itemStyle = {
+                    color: '#FF7F3E'
+                  };
+                  node.symbolSize = 8;
+                }
+                return node;
+              }),
+              categories: [
+                {
+                  name: 'User',
+                  itemStyle: {
+                    color: '#ffffff',
+                    borderColor: '#FF7F3E',
+                    borderWidth: 1
+                  }
+                },
+                {
+                  name: 'Pet',
+                  itemStyle: {
+                    color: '#FF7F3E'
+                  }
+                }
+              ],
+              force: {
+                edgeLength: 50,
+                repulsion: 200,
+                gravity: 0.25
+              },
+              emphasis: {
+                focus: 'adjacency'
+              },
+              animation: true,
+              animationDuration: 1500,
+              edges: data.links.map(function (link) {
+                link.lineStyle = {
+                  width: 0.5,
+                  opacity: 0.8
+                };
+                return link;
+              })
+            }
+          ]
+        };
+        myChartLeft.setOption(optionLeft);
+      });
+
+      // 右侧图表
+      var chartDomRight = document.getElementById('right-graph');
+      var myChartRight = echarts.init(chartDomRight);
+      myChartRight.showLoading();
+      $.get('./data/finished_graph_data.json', function (data) {
+        myChartRight.hideLoading();
+        var optionRight = {
+          legend: {
+            data: ['User', 'Pet'],
+            top: 40, // 图例距离顶部的距离
+            left: 'center' // 图例居中
+          },
+<!--          grid: {-->
+<!--            top: 50, // 增加图表上方的空间，使图例和图表更紧凑-->
+<!--          },-->
+          series: [
+            {
+              type: 'graph',
+              layout: 'force',
+              animation: false,
+              label: {
+                position: 'right',
+                formatter: '{b}'
+              },
+              draggable: true,
+              data: data.nodes.map(function (node, idx) {
+                node.id = idx;
+                if (node.category === 0) {
+                  node.itemStyle = {
+                    color: '#ffffff',
+                    borderColor: '#FF7F3E',
+                    borderWidth: 2
+                  };
+                  node.symbolSize = 10;
+                } else if (node.category === 1) {
+                  node.itemStyle = {
+                    color: '#FF7F3E'
+                  };
+                  node.symbolSize = 8;
+                }
+                return node;
+              }),
+              categories: [
+                {
+                  name: 'User',
+                  itemStyle: {
+                    color: '#ffffff',
+                    borderColor: '#FF7F3E',
+                    borderWidth: 1
+                  }
+                },
+                {
+                  name: 'Pet',
+                  itemStyle: {
+                    color: '#FF7F3E'
+                  }
+                }
+              ],
+              force: {
+                edgeLength: 50,
+                repulsion: 200,
+                gravity: 0.25
+              },
+              emphasis: {
+                focus: 'adjacency'
+              },
+              animation: true,
+              animationDuration: 1500,
+              edges: data.links.map(function (link) {
+                link.lineStyle = {
+                  width: 0.5,
+                  opacity: 0.8
+                };
+                return link;
+              })
+            }
+          ]
+        };
+        myChartRight.setOption(optionRight);
+      });
+    </script>
+  </body>
+</html>

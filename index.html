@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Visualization</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      justify-content: center;
+      text-align: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+
+    h1{
+      padding-top: 100px;
+    }
+
+    a{
+      text-decoration: none;
+    }
+    #cards{
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 60vh;
+      background-color: #f4f4f4;
+    }
+
+    .card-container {
+      display: flex;
+      justify-content: space-between;
+      width: 80%;
+
+    }
+
+    .card {
+      width: 22%;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      padding: 20px;
+      cursor: pointer;
+      margin-left: 20px;
+      margin-right: 20px;
+    }
+
+    .card img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+      margin-bottom: 15px;
+    }
+
+    .card h3 {
+      font-size: 1.2em;
+      margin: 0;
+      color: #333;
+    }
+
+    .card p {
+      font-size: 1em;
+      color: #777;
+    }
+
+    /* 鼠标滑过卡片时的效果 */
+    .card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+  </style>
+</head>
+<body>
+  <h1>Data Visualization</h1>
+  <div id="cards">
+    <div class="card-container">
+    <div class="card">
+      <a href="matrix_no_result.html">
+        <img src="imgs/Example Matrix.jpg" alt="Card 1">
+        <h3>User-Pet Example Matrix</h3>
+        <p>Matrix Example without Cosine Similarity</p>
+      </a>
+    </div>
+
+    <div class="card">
+      <a href="matrics.html">
+        <img src="imgs/Example with Cos.jpg" alt="Card 2">
+        <h3>User-Pet Example Matrix</h3>
+        <p>Matrix Example with Cosine Similarity</p>
+      </a>
+    </div>
+
+    <div class="card">
+      <a href="matrics_all.html">
+        <img src="imgs/Matrix all data.jpg" alt="Card 3">
+        <h3>User-Pet Matrix</h3>
+        <p>Matrix containing all data</p>
+      </a>
+    </div>
+
+    <div class="card">
+      <a href="collaberate_recommendation_graph_all.html">
+        <img src="imgs/Recommendation Graph.jpg" alt="Card 4">
+        <h3>Recommendation Graph</h3>
+        <p>Recommendation relationship before and after collaborative filter</p>
+      </a>
+    </div>
+  </div>
+
+  </div>
+
+</body>
+</html>
